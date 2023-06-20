@@ -154,7 +154,7 @@ bool game::Field::createModels() {
         for (size_t i = 0; i < vct.size(); i++) {
             auto& obj = *vct[i];
             auto model = std::make_shared<Mesh>();
-            model->setColor(obj.getColor());
+            model->setTexture(renderer->getTexture(obj.getTextureName()));
             model->setScale(obj.getScale());
             model->setTranslate(obj.getTranslate());
             model->setPosition(obj.getPosition());

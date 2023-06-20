@@ -10,7 +10,6 @@ Shader *Shader::loadShader(
         const std::string& fragmentSource,
         const std::string& positionAttributeName,
         const std::string& uvAttributeName,
-        const std::string& colorAttributeName,
         const std::string& transformMatrixUniformName) {
     Shader *shader = nullptr;
 
@@ -51,19 +50,17 @@ Shader *Shader::loadShader(
             // indices with layout= in your shader, but it is not done in this sample
             GLint positionAttribute = glGetAttribLocation(program, positionAttributeName.c_str());
             GLint uvAttribute = glGetAttribLocation(program, uvAttributeName.c_str());
-            GLint colorAttribute = glGetAttribLocation(program, colorAttributeName.c_str());
             GLint transformMatrixUniform = glGetUniformLocation(program, transformMatrixUniformName.c_str());
 
             // Only create a new shader if all the attributes are found.
             if (positionAttribute != -1
-                && (uvAttribute != -1 || colorAttribute != -1)
+                && uvAttribute != -1
                 && transformMatrixUniform != -1) {
 
                 shader = new Shader(
                         program,
                         positionAttribute,
                         uvAttribute,
-                        colorAttribute,
                         transformMatrixUniform);
             } else {
                 glDeleteProgram(program);
@@ -117,7 +114,7 @@ void Shader::deactivate() const {
     glUseProgram(0);
 }
 
-void Shader::drawModel(const Sprite& model) const {
+void Shader::drawModel(const BaseModel& model) const {
     // The position attribute is 3 floats
     glVertexAttribPointer(
             position_, // attrib
@@ -148,36 +145,6 @@ void Shader::drawModel(const Sprite& model) const {
     glDrawElements(GL_TRIANGLES, model.getIndexCount(), GL_UNSIGNED_SHORT, model.getIndexData());
 
     glDisableVertexAttribArray(uv_);
-    glDisableVertexAttribArray(position_);
-}
-
-void Shader::drawModel(const Mesh& model) const {
-    // The position attribute is 3 floats
-    glVertexAttribPointer(
-            position_, // attrib
-            3, // elements
-            GL_FLOAT, // of type float
-            GL_FALSE, // don't normalize
-            sizeof(ColorVertex), // stride is TextureVertex bytes
-            model.getVertexData() // pull from the start of the vertex data
-    );
-    glEnableVertexAttribArray(position_);
-
-    // The uv attribute is 2 floats
-    glVertexAttribPointer(
-            color_, // attrib
-            3, // elements
-            GL_FLOAT, // of type float
-            GL_FALSE, // don't normalize
-            sizeof(ColorVertex), // stride is ColorVertex bytes
-            ((uint8_t *) model.getVertexData()) + sizeof(glm::vec3) // offset Vector3 from the start
-    );
-    glEnableVertexAttribArray(color_);
-
-    // Draw as indexed triangles
-    glDrawElements(GL_TRIANGLES, model.getIndexCount(), GL_UNSIGNED_SHORT, model.getIndexData());
-
-    glDisableVertexAttribArray(color_);
     glDisableVertexAttribArray(position_);
 }
 

@@ -4,8 +4,7 @@
 #include <string>
 #include <GLES3/gl3.h>
 
-class Sprite;
-class Mesh;
+class BaseModel;
 
 /*!
  * A class representing a simple shader program. It consists of vertex and fragment components. The
@@ -33,7 +32,6 @@ public:
             const std::string& fragmentSource,
             const std::string& positionAttributeName,
             const std::string& uvAttributeName,
-            const std::string& colorAttributeName,
             const std::string& transformMatrixUniformName);
 
     inline ~Shader() {
@@ -55,17 +53,11 @@ public:
 
     /*!
      * Renders a single model
-     * @param model a 2D model to render
+     * @param model a 2D/3D model to render
      */
      // TODO : to think how to combine for 2D and 3D models in one method
-    void drawModel(const Sprite& model) const;
+    void drawModel(const BaseModel& model) const;
 
-    /*!
-     * Renders a single model
-     * @param model a 3D model to render
-     */
-    // TODO : to think how to combine for 2D and 3D models in one method
-    void drawModel(const Mesh& model) const;
 
     /*!
      * Sets the model/view/projection matrix in the shader.
@@ -93,18 +85,15 @@ private:
             GLuint program,
             GLint position,
             GLint uv,
-            GLint color,
             GLint transformMatrix)
             : program_(program),
               position_(position),
               uv_(uv),
-              color_(color),
               transformMatrix_(transformMatrix) {}
 
     GLuint program_;
     GLint position_;
     GLint uv_;
-    GLint color_;
     GLint transformMatrix_;
 };
 

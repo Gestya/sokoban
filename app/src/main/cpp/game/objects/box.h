@@ -14,15 +14,10 @@ public:
         return ObjectId::Box;
     }
 
-    std::string getTextureName() override {
-        // TODO : must use both textures or use advanced shader or ...
-        return "box0.png";
-    }
-
-    const glm::vec3& getColor() const override {
-        static glm::vec3 colorOn = hexToColor(0xde5a15);
-        static glm::vec3 colorOff = hexToColor(0xca7346);
-        return highlighted ? colorOn : colorOff;
+    const std::string& getTextureName() const override {
+        static std::string texOff{"box0.png"};
+        static std::string texOn{"box1.png"};
+        return highlighted ? texOn : texOff;
     }
 
     const glm::vec3& getScale() const override {

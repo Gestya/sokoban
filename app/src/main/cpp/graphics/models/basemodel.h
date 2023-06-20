@@ -14,57 +14,49 @@ struct TextureVertex {
     glm::vec2 uv;
 };
 
-struct ColorVertex {
-    constexpr ColorVertex(const glm::vec3& inPosition, const glm::vec3& inColor)
-            : position(inPosition),
-              color(inColor) {}
-
-    glm::vec3 position;
-    glm::vec3 color;
-};
 
 typedef uint16_t Index;
 
 
-template<class V>
 class BaseModel {
 public:
     inline BaseModel(
-            std::vector<V> vertices,
+            std::vector<TextureVertex> vertices,
             std::vector<Index> indices,
             std::shared_ptr<TextureAsset> texture)
-            : vertices(std::move(vertices)),
-              indices(std::move(indices)),
-              texture(std::move(texture)) {}
+            : vertices_(std::move(vertices)),
+              indices_(std::move(indices)),
+              texture_(std::move(texture)) {}
 
-    inline V* getVertexData() {
-        return vertices.data();
+    inline TextureVertex* getVertexData() {
+        return vertices_.data();
     }
 
-    inline const V* getVertexData() const {
-        return vertices.data();
+    inline const TextureVertex* getVertexData() const {
+        return vertices_.data();
     }
 
     inline const size_t getIndexCount() const {
-        return indices.size();
+        return indices_.size();
     }
 
     inline const Index* getIndexData() const {
-        return indices.data();
+        return indices_.data();
     }
 
     inline const TextureAsset& getTexture() const {
-        return *texture;
+        return *texture_;
+    }
+
+    inline void setTexture(std::shared_ptr<TextureAsset> texture) {
+        texture_ = std::move(texture);
     }
 
 protected:
-    std::vector<V> vertices;
-    std::vector<Index> indices;
-    std::shared_ptr<TextureAsset> texture;
+    std::vector<TextureVertex> vertices_;
+    std::vector<Index> indices_;
+    std::shared_ptr<TextureAsset> texture_;
 };
-
-
-
 
 
 #endif //ANDROIDGLINVESTIGATIONS_MODEL_H

@@ -13,8 +13,7 @@
 
 // Shader sources.
 // They must be loaded from assets in the future
-#include "Shader_2D_src.cpp"
-#include "Shader_3D_src.cpp"
+#include "Shader_SRC.cpp"
 
 #include "../glm/gtc/matrix_transform.hpp"
 
@@ -76,9 +75,9 @@ void Renderer::render() {
     updateRenderArea();
 
     // setup any other gl related global states
-    float r = static_cast<float>(sin(15 * time_ + 97) * 0.5 + 0.5);
-    float g = static_cast<float>(sin(17 * time_ + 43) * 0.5 + 0.5);
-    float b = static_cast<float>(sin(19 * time_ + 11) * 0.5 + 0.5);
+    auto r = static_cast<float>(sin(15 * time_ + 97) * 0.5 + 0.5);
+    auto g = static_cast<float>(sin(17 * time_ + 43) * 0.5 + 0.5);
+    auto b = static_cast<float>(sin(19 * time_ + 11) * 0.5 + 0.5);
     glClearColor(r/3.0f, g/3.0f, b/3.0f, 1.f);
 
     // clear color and depth buffers
@@ -193,13 +192,9 @@ void Renderer::initRenderer() {
     PRINT_GL_STRING(GL_VERSION);
     PRINT_GL_STRING_AS_LIST(GL_EXTENSIONS);
 
-    shader2d_ = std::unique_ptr<Shader>(
-            Shader::loadShader(vertex2d, fragment2d, "inPosition", "inUV", "", "uTransform"));
-    assert(shader2d_);
-
-    shader3d_ = std::unique_ptr<Shader>(
-            Shader::loadShader(vertex3d, fragment3d, "inPosition", "", "inColor", "uTransform"));
-    assert(shader3d_);
+    shader_ = std::unique_ptr<Shader>(
+            Shader::loadShader(vertex_shader, fragment_shader, "inPosition", "inUV", "uTransform"));
+    assert(shader_);
 
     // setup any other gl related global states
     glClearColor(CORNFLOWER_BLUE);
@@ -235,24 +230,24 @@ void Renderer::draw2d() {
     // disable depth testing
     glDisable(GL_DEPTH_TEST);
 
-    shader2d_->activate();
+    shader_->activate();
 
     shaderNeedsNewTransformMatrix_ = true; // TODO : must be fixed ASAP!!
     if (shaderNeedsNewTransformMatrix_) {
         glm::mat4 identity(1.f);
-        shader2d_->setTransformMatrix(&identity[0][0]);;
+        shader_->setTransformMatrix(&identity[0][0]);;
 
         shaderNeedsNewTransformMatrix_ = false;
     }
 
     for (auto& sprite: sprites_) {
         if (auto s = sprite.lock()) {
-            shader2d_->drawModel(*s);
+            shader_->drawModel(*s);
         }
     }
     sprites_.clear();
 
-    shader2d_->deactivate();
+    shader_->deactivate();
 }
 
 void Renderer::draw3d() {
@@ -263,7 +258,7 @@ void Renderer::draw3d() {
     glClearDepthf(1.0f);
     glDepthRangef(0.01f, 1.0f);
 
-    shader3d_->activate();
+    shader_->activate();
 
     if (shaderNeedsNewTransformMatrix_) {
         // TODO : need to think here!
@@ -278,11 +273,11 @@ void Renderer::draw3d() {
             glm::mat4 world = translate * scale;
 
             glm::mat4 transform = camera_.getProjView() * world;
-            shader3d_->setTransformMatrix(&transform[0][0]);
+            shader_->setTransformMatrix(&transform[0][0]);
 
-            shader3d_->drawModel(*model);
+            shader_->drawModel(*model);
         }
     }
 
-    shader3d_->deactivate();
+    shader_->deactivate();
 }

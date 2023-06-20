@@ -3,28 +3,28 @@
 #include "../appcore.h"
 #include "../core/commandmanager.h"
 
-#include "../AndroidOut.h"  // Debug
-
 
 Camera::Camera() {
-    recalculate();
+    update();
 
     auto *commandManager = AppCore::getInstance().getCommandManager();
     commandManager->registerCommand("camera.scroll", this, CommandManager::Executor(&Camera::onCameraScroll));
     commandManager->bindKey(KeyCodes::KeySpace, "camera.scroll");
+    commandManager->registerCommand("camera.reset", this, CommandManager::Executor(&Camera::onCameraReset));
+    commandManager->bindKey(KeyCodes::KeyQ, "camera.reset");
 }
 
 void Camera::init(const Settings& inSettings) {
     settings = inSettings;
-    recalculate();
+    update();
 }
 
 void Camera::changeAspect(int width, int height) {
     settings.aspect = static_cast<float>(width) / static_cast<float>(height);
-    recalculate();
+    update();
 }
 
-void Camera::recalculate() {
+void Camera::update() {
     proj = glm::perspective(settings.fov, settings.aspect, settings.near, settings.far);
     view = glm::lookAt(settings.eye, settings.center, settings.up);
     projView = proj * view;
@@ -32,6 +32,13 @@ void Camera::recalculate() {
 
 void Camera::onCameraScroll() {
     scroll = !scroll;
+}
+
+void Camera::onCameraReset() {
+    auto aspect = settings.aspect;
+    settings = Settings();
+    settings.aspect = aspect;
+    update();
 }
 
 bool Camera::onMouseDown(const MouseEvent& event) {
@@ -57,12 +64,7 @@ bool Camera::onMouseMove(const MouseEvent& event) {
     if (scroll)
         settings.center += glm::vec3{delta, 0.f};
 
-    // Debug
-    aout << std::endl;
-    aout << "EYE  X = " << settings.eye.x << " Y = " << settings.eye.y << " Z = " << settings.eye.z << std::endl;
-    aout << "CENTER  X = " << settings.center.x << " Y = " << settings.center.y << " Z = " << settings.center.z << std::endl;
-
-    recalculate();
+    update();
 
     return true;
 }

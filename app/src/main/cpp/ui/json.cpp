@@ -26,7 +26,7 @@ static const char* JSON = R"json(
 
     "WinningWindow" : {
         "type" : "window",
-        "position" : [680, 590],
+        "position" : [50, 1130],
         "size" : [1200, 492],
         "visible" : false,
         "widgets" : {

@@ -22,8 +22,7 @@ public:
     virtual ~Object() {}
 
     virtual ObjectId getId() = 0;
-    virtual std::string getTextureName() = 0;
-    virtual const glm::vec3& getColor() const = 0;
+    virtual const std::string& getTextureName() const = 0;
     virtual const glm::vec3& getScale() const = 0;
     virtual const glm::vec3& getTranslate() const = 0;
 

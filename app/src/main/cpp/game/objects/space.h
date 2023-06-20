@@ -14,13 +14,9 @@ public:
         return ObjectId::Space;
     }
 
-    std::string getTextureName() override {
-        return "space.png";
-    }
-
-    const glm::vec3& getColor() const override {
-        static glm::vec3 color = hexToColor(0x05192d);
-        return color;
+    const std::string& getTextureName() const override {
+        static std::string texture{"space.png"};
+        return texture;
     }
 
     const glm::vec3& getScale() const override {

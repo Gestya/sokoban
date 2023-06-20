@@ -92,8 +92,7 @@ private:
 
     bool shaderNeedsNewTransformMatrix_;
 
-    std::unique_ptr<Shader> shader2d_;
-    std::unique_ptr<Shader> shader3d_;
+    std::unique_ptr<Shader> shader_;
     std::vector<std::weak_ptr<Sprite>> sprites_;
     std::vector<std::shared_ptr<Mesh>> models3d_;
     std::map<std::string, std::shared_ptr<TextureAsset>> textures_;

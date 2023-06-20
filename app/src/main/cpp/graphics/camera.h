@@ -34,13 +34,14 @@ public:
     void changeAspect(int width, int height);
 
 private:
-    void recalculate();
+    void update();
 
     bool onMouseDown(const MouseEvent& event) override;
     bool onMouseUp(const MouseEvent& event) override;
     bool onMouseMove(const MouseEvent& event) override;
 
     void onCameraScroll();
+    void onCameraReset();
 
     bool scroll{false};
     bool mouseButton{false};

@@ -22,9 +22,8 @@ add_library(sokoban SHARED
 		graphics/shader.cpp
 		graphics/textureAsset.cpp
 		graphics/utility.cpp
-		graphics/Shader_2D_src.cpp
-		graphics/Shader_3D_src.cpp
-		# -- Game
+		graphics/Shader_SRC.cpp
+        # -- Game
 		game/objects/wall.cpp
 		game/objects/space.cpp
 		game/objects/dude.cpp

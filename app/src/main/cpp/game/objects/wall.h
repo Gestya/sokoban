@@ -14,13 +14,9 @@ public:
         return ObjectId::Wall;
     }
 
-    std::string getTextureName() override {
-        return "wall.png";
-    }
-
-    const glm::vec3& getColor() const override {
-        static glm::vec3 color = hexToColor(0x1e8742);
-        return color;
+    const std::string& getTextureName() const override {
+        static std::string texture{"wall.png"};
+        return texture;
     }
 
     const glm::vec3& getScale() const override {
